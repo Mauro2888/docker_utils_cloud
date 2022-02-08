@@ -1,0 +1,98 @@
+Docker Commands Cheat Sheet
+https://appsdeveloperblog.com/docker-commands-cheat-sheet/
+
+Install Docker on EC2 Linux Instance
+To install Docker on EC2 Linux machine run these commands one by one.
+
+sudo yum install docker 
+sudo service docker start
+sudo usermod -a -G docker ec2-user
+Note: After running the sudo usermod -a -G docker ec2-user you can re-login to EC2 instance and it will no longer require you to use sudo when running Docker command. 
+
+Start Docker as Service
+sudo service docker start
+Make Docker Not Require sudo Anymore
+sudo usermod -a -G docker ec2-user
+Note: After running the above command, you need to re-login to EC2 instance and it will no longer require you to use sudo when running Docker command. 
+
+List Currently Running Docker Containers
+docker ps –all
+Start Docker Container
+docker start <CONTAINER ID HERE>
+Stop Running Docker Container
+docker stop <CONTAINER ID HERE>
+Delete Docker Container
+docker rm <CONTAINER ID HERE>
+Note: To delete a running Docker container, you will need to first stop it. Execute the docker stop <CONTAINER ID> command to first stop running docker container.
+
+List Docker Images on Computer
+docker images -a
+Remove Docker Image
+docker rmi <IMAGE ID HERE>
+or
+
+docker rmi -f <IMAGE ID HERE>
+Remove All Docker Images on Computer
+docker rmi $(docker images -f dangling=true)
+Build Docker Image
+docker build --tag=<IMAGE TAG NAME> --force-rm=true .
+For example:
+
+docker build --tag=albums-microservice --force-rm=true .
+Run Docker Image in Docker Container
+docker run -d <IMAGE NAME>
+Where -d is used to detach the process so you can continue working with a terminal window and execute other commands.
+
+Check Docker Container Logs
+docker logs <CONTAINER ID HERE>
+For example:
+
+docker logs ceaf9e1ebef5
+Inspect Docker Container
+docker inspect <CONTAINER ID HERE>
+Execute Commands in Docker Container
+docker exec -it <CONTAINER ID HERE> <COMMAND TO RUN>
+For example:
+
+docker exec -it 67e36143717b ls
+docker exec -it 67e36143717b bash
+Pass Environment Variables
+docker run <CONTAINER ID> -e "<ENVIRONMENT VARIABLE NAME>=<VALUE>"
+For example:
+
+docker run ceaf9e1ebef5 -e "SPRING_PROFILES_ACTIVE=dev" -e "server.port=8080"
+List Docker Networks on Computer
+docker network ls
+Create Custom Docker Bridge Network
+docker network create --driver bridge <NEW NETWORK NAME>
+then you can run Docker container in a newly created custom bridge network
+
+docker run <CONTAINER ID > --network <NAME OF CREATED NETWORK>
+Publish Docker Image to Docker Hub
+To publish an existing Docker image to a Docker Hub Repository, follow these steps:
+
+Open Browser window and login to docker hub,
+Create a new Repository in your Docker Hub account,
+Open a Terminal window on your computer and Login to Docker Hub account:
+docker login --username=<DOCKER HUB USER NAME>
+List existing Docker images on your computer and look up Docker image ID of the Image you want to publish on Docker Hub.
+docker images ls
+Tag Docker image on your computer with a Docker Hub repository name the following way:
+docker tag <CONTAINER ID> <DOCKER HUB USERNAME>/<REPOSITORY NAME>
+For example:
+
+docker tag ceaf9e1ebef5 kargopolov/albums-microservice
+Push Docker image on your computer to a Docker Hub Repository name:
+docker push <Docker Hub User name>/<Repository name>
+For example:
+
+docker push kargopolov/albums-microservice
+Bind a Directory in Docker Container to a Directory on Host Machine
+docker run -d -v esdata1:/usr/share/elasticsearch/data --name elasticsearch --network host docker.elastic.co/elasticsearch/elasticsearch:7.2.0
+where:
+
+-v <directory on HOST machine>:<directory in Docker container>
+
+Make Docker Container use Host Network and Avoid Port Binding
+docker run <IMAGE ID> --network host
+To learn more about Docker, check the below list of onli
